@@ -5,7 +5,8 @@
 #define MAX_PRIO 140
 
 #define MM_PAGING
-//#define MM_PAGING_HEAP_GODOWN
+#define MM_PAGING_HEAP_GODOWN
+#define MM_PAGIMG_HEAP_GODOWN
 //#define MM_FIXED_MEMSZ
 //#define VMDBG 1
 //#define MMDBG 1

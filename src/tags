@@ -18,6 +18,7 @@ MEMPHY_read	mm-memphy.c	/^int MEMPHY_read(struct memphy_struct * mp, int addr, B
 MEMPHY_seq_read	mm-memphy.c	/^int MEMPHY_seq_read(struct memphy_struct *mp, int addr, BYTE *value)$/;"	f	typeref:typename:int
 MEMPHY_seq_write	mm-memphy.c	/^int MEMPHY_seq_write(struct memphy_struct * mp, int addr, BYTE value)$/;"	f	typeref:typename:int
 MEMPHY_write	mm-memphy.c	/^int MEMPHY_write(struct memphy_struct * mp, int addr, BYTE data)$/;"	f	typeref:typename:int
+MarkedPrior	sched.c	/^int MarkedPrior = 0 ;$/;"	v	typeref:typename:int
 OPT_ALLOC	loader.c	/^#define OPT_ALLOC	/;"	d	file:
 OPT_CALC	loader.c	/^#define OPT_CALC	/;"	d	file:
 OPT_FREE	loader.c	/^#define OPT_FREE	/;"	d	file:
@@ -43,6 +44,7 @@ alloc_pages_range	mm.c	/^int alloc_pages_range(struct pcb_t *caller, int req_pgn
 attach_event	timer.c	/^struct timer_id_t * attach_event() {$/;"	f	typeref:struct:timer_id_t *
 avail_pid	loader.c	/^static uint32_t avail_pid = 1;$/;"	v	typeref:typename:uint32_t	file:
 calc	cpu.c	/^int calc(struct pcb_t * proc) {$/;"	f	typeref:typename:int
+count	sched.c	/^int count = 0;$/;"	v	typeref:typename:int
 cpu_args	os.c	/^struct cpu_args {$/;"	s	file:
 cpu_routine	os.c	/^static void * cpu_routine(void * args) {$/;"	f	typeref:typename:void *	file:
 current_time	timer.c	/^uint64_t current_time() {$/;"	f	typeref:typename:uint64_t
@@ -57,6 +59,7 @@ enlist_vm_freerg_list	mm-vm.c	/^int enlist_vm_freerg_list(struct mm_struct *mm, 
 enlist_vm_rg_node	mm.c	/^int enlist_vm_rg_node(struct vm_rg_struct **rglist, struct vm_rg_struct* rgnode)$/;"	f	typeref:typename:int
 enqueue	queue.c	/^void enqueue(struct queue_t * q, struct pcb_t * proc) {$/;"	f	typeref:typename:void
 find_victim_page	mm-vm.c	/^int find_victim_page(struct mm_struct *mm, int *retpgn)$/;"	f	typeref:typename:int
+flag	sched.c	/^int flag = 1;$/;"	v	typeref:typename:int
 free_data	cpu.c	/^int free_data(struct pcb_t * proc, uint32_t reg_index) {$/;"	f	typeref:typename:int
 free_mem	mem.c	/^int free_mem(addr_t address, struct pcb_t * proc) {$/;"	f	typeref:typename:int
 free_pcb_memph	mm-vm.c	/^int free_pcb_memph(struct pcb_t *caller)$/;"	f	typeref:typename:int
@@ -114,6 +117,7 @@ print_list_rg	mm.c	/^int print_list_rg(struct vm_rg_struct *irg)$/;"	f	typeref:t
 print_list_vma	mm.c	/^int print_list_vma(struct vm_area_struct *ivma)$/;"	f	typeref:typename:int
 print_pgtbl	mm.c	/^int print_pgtbl(struct pcb_t *caller, uint32_t start, uint32_t end)$/;"	f	typeref:typename:int
 prio	os.c	/^	unsigned long * prio;$/;"	m	struct:ld_args	typeref:typename:unsigned long *	file:
+prioSlot	sched.c	/^int prioSlot[MAX_PRIO];$/;"	v	typeref:typename:int[]
 proc	mem.c	/^	uint32_t proc;	\/\/ ID of process currently uses this page$/;"	m	struct:__anon0feca7550108	typeref:typename:uint32_t	file:
 pte_set_fpn	mm.c	/^int pte_set_fpn(uint32_t *pte, int fpn)$/;"	f	typeref:typename:int
 pte_set_swap	mm.c	/^int pte_set_swap(uint32_t *pte, int swptyp, int swpoff)$/;"	f	typeref:typename:int

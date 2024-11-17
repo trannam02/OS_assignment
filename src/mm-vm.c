@@ -14,23 +14,28 @@
  *@rg_elmt: new region
  *
  */
-int enlist_vm_freerg_list(struct mm_struct *mm, struct vm_rg_struct rg_elmt)
+int enlist_vm_freerg_list(struct mm_struct *mm, struct vm_rg_struct _rg_elmt)
 {
-    struct vm_rg_struct *rg_node = rg_elmt.vmaid ? mm->mmap->vm_next->vm_freerg_list : mm->mmap->vm_freerg_list;
+    struct vm_rg_struct * rg_elmt = malloc(sizeof(struct vm_rg_struct));
+    rg_elmt->vmaid = _rg_elmt.vmaid;
+    rg_elmt->rg_start = _rg_elmt.rg_start;
+    rg_elmt->rg_end = _rg_elmt.rg_end;
+    rg_elmt->rg_next = _rg_elmt.rg_next;
 
-    if (rg_elmt.rg_start >= rg_elmt.rg_end)
+    struct vm_rg_struct *rg_node = rg_elmt->vmaid ? mm->mmap->vm_next->vm_freerg_list : mm->mmap->vm_freerg_list;
+    
+    if (rg_elmt->rg_start >= rg_elmt->rg_end)
         return -1;
 
     if (rg_node != NULL)
-        rg_elmt.rg_next = rg_node;
+        rg_elmt->rg_next = rg_node;
 
     /* Enlist the new region */
-    if(rg_elmt.vmaid){
-        mm->mmap->vm_next->vm_freerg_list = &rg_elmt;
-    }else{
-        mm->mmap->vm_freerg_list = &rg_elmt;
+    if(rg_elmt->vmaid) {
+        mm->mmap->vm_next->vm_freerg_list = rg_elmt;
+    } else {
+        mm->mmap->vm_freerg_list = rg_elmt;
     };
-
     return 0;
 }
 
@@ -43,8 +48,9 @@ struct vm_area_struct *get_vma_by_num(struct mm_struct *mm, int vmaid)
 {
     struct vm_area_struct *pvma= mm->mmap;
 
-    if(mm->mmap == NULL)
+    if(mm->mmap == NULL) {
         return NULL;
+    };
 
     int vmait = 0;
 
@@ -56,7 +62,6 @@ struct vm_area_struct *get_vma_by_num(struct mm_struct *mm, int vmaid)
         vmait++;
         pvma = pvma->vm_next;
     }
-
     return pvma;
 }
 
@@ -84,6 +89,7 @@ struct vm_rg_struct *get_symrg_byid(struct mm_struct *mm, int rgid)
 int __alloc(struct pcb_t *caller, int vmaid, int rgid, int size, int *alloc_addr)
 {
     /*Allocate at the toproof */
+
     struct vm_rg_struct rgnode;
 
     /* TODO: commit the vmaid */
@@ -99,56 +105,44 @@ int __alloc(struct pcb_t *caller, int vmaid, int rgid, int size, int *alloc_addr
         caller->mm->symrgtbl[rgid].vmaid = rgnode.vmaid;
 
         *alloc_addr = rgnode.rg_start;
-
+        
+        printf("\nAlloc: Have free rg");
         return 0;
     }
-
-    /* TODO: get_free_vmrg_area FAILED handle the region management (Fig.6)*/
-
-    /* TODO retrive current vma if needed, current comment out due to compiler redundant warning*/
-    /*Attempt to increate limit to get space */
-    // Nam code start
     struct vm_area_struct *cur_vma = get_vma_by_num(caller->mm, vmaid);
-    // Nam code end
-    /* int inc_sz = PAGING_PAGE_ALIGNSZ(size); */
     int inc_limit_ret;
 
-    /* TODO retrive old_sbrk if needed, current comment out due to compiler redundant warning*/
-    // Nam code start
-    int old_sbrk = cur_vma->sbrk;
+    long old_sbrk = cur_vma->sbrk;
     int old_end = cur_vma->vm_end;
-    // Nam code end
-    
+
     // size is smaller than space between sbrk -> vmend
-    if(size <= (cur_vma->vm_end - cur_vma->sbrk)){
+    if(size <= (cur_vma->vm_end - cur_vma->sbrk)) {
         cur_vma->sbrk = cur_vma->sbrk + size;
         caller->mm->symrgtbl[rgid].rg_start = old_sbrk;
         caller->mm->symrgtbl[rgid].rg_end = cur_vma->sbrk;
 
         caller->mm->symrgtbl[rgid].vmaid = rgnode.vmaid;
+
+        printf("My sbrk  %ld -> %ld",old_sbrk, cur_vma->sbrk);
         *alloc_addr = old_sbrk;
         return 0;
     };
-    
 
-    /* TODO INCREASE THE LIMIT
-     * inc_vma_limit(caller, vmaid, inc_sz)
-     */
-    // increase size and commit new sbrk
     inc_vma_limit(caller, vmaid, size, &inc_limit_ret);
 
     /* TODO: commit the limit increment */
 
-    /* cur_vma->sbrk = old_end + size; */ 
+    /* cur_vma->sbrk = old_end + size; */
     /* TODO: commit the allocation address
     */
     // commit symbol table
-        caller->mm->symrgtbl[rgid].rg_start = old_sbrk;
-        caller->mm->symrgtbl[rgid].rg_end = cur_vma->sbrk;
+    caller->mm->symrgtbl[rgid].rg_start = old_sbrk;
+    caller->mm->symrgtbl[rgid].rg_end = cur_vma->sbrk;
 
-        caller->mm->symrgtbl[rgid].vmaid = rgnode.vmaid;
+    caller->mm->symrgtbl[rgid].vmaid = rgnode.vmaid;
     *alloc_addr = old_sbrk;
-
+    printf("My sbrk  %ld -> %ld",old_sbrk, cur_vma->sbrk);
+    print_pgtbl(caller, 1,1);
     return 0;
 }
 
@@ -162,12 +156,6 @@ int __alloc(struct pcb_t *caller, int vmaid, int rgid, int size, int *alloc_addr
 int __free(struct pcb_t *caller, int rgid)
 {
     struct vm_rg_struct rgnode;
-
-    // Dummy initialization for avoding compiler dummay warning
-    // in incompleted TODO code rgnode will overwrite through implementing
-    // the manipulation of rgid later
-    rgnode.vmaid = 0;  //dummy initialization
-    rgnode.vmaid = 1;  //dummy initialization
 
     if(rgid < 0 || rgid > PAGING_MAX_SYMTBL_SZ)
         return -1;
@@ -450,7 +438,7 @@ struct vm_rg_struct* get_vm_area_node_at_brk(struct pcb_t *caller, int vmaid, in
     newrg = malloc(sizeof(struct vm_rg_struct));
 
     /* TODO: update the newrg boundary
-    newrg->rg_start = cur_vma 
+    newrg->rg_start = cur_vma
     // newrg->rg_end = ...
     */
     // Nam code start
@@ -476,13 +464,12 @@ int validate_overlap_vm_area(struct pcb_t *caller, int vmaid, int vmastart, int 
     /* TODO validate the planned memory area is not overlapped */
 
     // Nam code start
-    if(vmaid == 0){
+    if(vmaid == 0) {
         if(vmaend <= get_vma_by_num(caller->mm,1)->vm_end) return -1;
-    }else{
+    } else {
         if(vmaend <= get_vma_by_num(caller->mm,0)->vm_end) return -1;
     };
     // Nam code end
-
     return 0;
 }
 
@@ -504,8 +491,8 @@ int inc_vma_limit(struct pcb_t *caller, int vmaid, int inc_sz, int* inc_limit_re
     int old_end = cur_vma->vm_end;
 
     /*Validate overlap of obtained region */
-    if (validate_overlap_vm_area(caller, vmaid, area->rg_start, area->rg_end) < 0)
-        return -1; /*Overlap and failed allocation */
+    /* if (validate_overlap_vm_area(caller, vmaid, area->rg_start, area->rg_end) < 0) */
+    /*     return -1; /*Overlap and failed allocation *1/ */
 
     /* TODO: Obtain the new vm area based on vmaid */
     // Nam code start
@@ -532,6 +519,12 @@ int find_victim_page(struct mm_struct *mm, int *retpgn)
     struct pgn_t *pg = mm->fifo_pgn;
 
     /* TODO: Implement the theorical mechanism to find the victim page */
+    if(pg != NULL) {
+        *retpgn = pg->pgn;
+        mm->fifo_pgn = pg->pg_next;
+    } else {
+        return -1;
+    }
 
     free(pg);
 

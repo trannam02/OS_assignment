@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include "./../include/cpu.h"
 #include "./../include/timer.h"
 #include "./../include/sched.h"
@@ -46,6 +47,7 @@ struct cpu_args {
 
 
 static void * cpu_routine(void * args) {
+    printf("\ncpu routine call\n");
 	struct timer_id_t * timer_id = ((struct cpu_args*)args)->timer_id;
 	int id = ((struct cpu_args*)args)->id;
 	/* Check for new process in ready queue */
@@ -90,7 +92,7 @@ static void * cpu_routine(void * args) {
 			printf("\tCPU %d: Dispatched process %2d\n",
 				id, proc->pid);
 			time_left = time_slot;
-		}
+		};
 		
 		/* Run current process */
 		run(proc);
