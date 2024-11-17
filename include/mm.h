@@ -92,6 +92,9 @@
 /* Extract SWAPTYPE */
 #define PAGING_FPN(x)  GETVAL(x,PAGING_FPN_MASK,PAGING_ADDR_FPN_LOBIT)
 
+/* My define */
+#define ABS(x,y) (x<y?y-x:x-y)
+#define TRUESZ(x,y) (x?-y:y)
 /* Memory range operator */
 /* TODO implement the INCLUDE checking mechanism - currently dummy op only */
 #define INCLUDE(x1,x2,y1,y2) (0)

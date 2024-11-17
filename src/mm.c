@@ -85,6 +85,7 @@ int vmap_page_range(struct pcb_t *caller, // process call
 {   // no guarantee all given pages are mapped
     //uint32_t * pte = malloc(sizeof(uint32_t));
     struct framephy_struct *fpit = malloc(sizeof(struct framephy_struct));
+    
     //int  fpn;
     int pgit = 0;
     int pgn = PAGING_PGN(addr);
@@ -105,13 +106,13 @@ int vmap_page_range(struct pcb_t *caller, // process call
     // loop and add fpns to ptes
     for(pgit = 0; pgit < pgnum; pgit++) {
 
-        pte_set_fpn(caller->mm->pgd + pgn + pgit, fpit->fpn);
+        pte_set_fpn(caller->mm->pgd + pgn + TRUESZ(ret_rg->vmaid,pgit), fpit->fpn);
 
         fpit = fpit->fp_next;
 
         /* Tracking for later page replacement activities (if needed)
         * Enqueue new usage page */
-        enlist_pgn_node(&caller->mm->fifo_pgn, pgn+pgit);
+        enlist_pgn_node(&caller->mm->fifo_pgn, pgn+TRUESZ(ret_rg->vmaid,pgit));
     };
     return 0;
 }
@@ -155,6 +156,7 @@ int alloc_pages_range(struct pcb_t *caller, int req_pgnum, struct framephy_struc
                 __swap_cp_page(caller->mram, vicfpn, caller->active_mswp, swfpn);
 
                 // mofify vicpgn -> swaped = 1
+                /* pte_set_swap(caller->mm->pgd[vicpgn], ); */
                 caller->mm->pgd[vicpgn] = caller->mm->pgd[vicpgn] | PAGING_PTE_SWAPPED_MASK;
                 caller->mm->pgd[vicpgn] = caller->mm->pgd[vicpgn] & ~PAGING_PTE_PRESENT_MASK;
 
@@ -410,7 +412,7 @@ int print_pgtbl(struct pcb_t *caller, uint32_t start, uint32_t end)
     pgn_start = PAGING_PGN(cur_vma->vm_start);
     pgn_end = PAGING_PGN(cur_vma->vm_end);
     printf("print_pgtbl[heap]: %d - %d\n", pgn_start, pgn_end);
-    for(pgit = pgn_start; pgit < pgn_end; pgit++) {
+    for(pgit = pgn_start; pgit > pgn_end; pgit--) {
             printf("%08ld: %08x\n", pgit * sizeof(uint32_t), caller->mm->pgd[pgit]);
     };
     printf("\n");

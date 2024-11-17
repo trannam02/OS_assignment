@@ -1,4 +1,3 @@
 0 3
 alloc 300 0
-free 0
-alloc 300 2
+malloc 300 2
