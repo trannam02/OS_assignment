@@ -16,7 +16,7 @@
  */
 int enlist_vm_freerg_list(struct mm_struct *mm, struct vm_rg_struct rg_elmt)
 {
-    struct vm_rg_struct *rg_node = mm->mmap->vm_freerg_list;
+    struct vm_rg_struct *rg_node = rg_elmt.vmaid ? mm->mmap->vm_next->vm_freerg_list : mm->mmap->vm_freerg_list;
 
     if (rg_elmt.rg_start >= rg_elmt.rg_end)
         return -1;
@@ -25,7 +25,11 @@ int enlist_vm_freerg_list(struct mm_struct *mm, struct vm_rg_struct rg_elmt)
         rg_elmt.rg_next = rg_node;
 
     /* Enlist the new region */
-    mm->mmap->vm_freerg_list = &rg_elmt;
+    if(rg_elmt.vmaid){
+        mm->mmap->vm_next->vm_freerg_list = &rg_elmt;
+    }else{
+        mm->mmap->vm_freerg_list = &rg_elmt;
+    };
 
     return 0;
 }
@@ -106,7 +110,7 @@ int __alloc(struct pcb_t *caller, int vmaid, int rgid, int size, int *alloc_addr
     // Nam code start
     struct vm_area_struct *cur_vma = get_vma_by_num(caller->mm, vmaid);
     // Nam code end
-    int inc_sz = PAGING_PAGE_ALIGNSZ(size);
+    /* int inc_sz = PAGING_PAGE_ALIGNSZ(size); */
     int inc_limit_ret;
 
     /* TODO retrive old_sbrk if needed, current comment out due to compiler redundant warning*/
@@ -130,19 +134,20 @@ int __alloc(struct pcb_t *caller, int vmaid, int rgid, int size, int *alloc_addr
     /* TODO INCREASE THE LIMIT
      * inc_vma_limit(caller, vmaid, inc_sz)
      */
-    inc_vma_limit(caller, vmaid, inc_sz, &inc_limit_ret);
+    // increase size and commit new sbrk
+    inc_vma_limit(caller, vmaid, size, &inc_limit_ret);
 
     /* TODO: commit the limit increment */
-    // enlist space from sbrk to old_end to free (this rgnode move to free)
-    rgnode.rg_start = old_sbrk; // does not change
-    rgnode.rg_end = old_end;
-    rgnode.vmaid = vmaid;
-    enlist_vm_freerg_list(caller->mm, rgnode);
 
-    cur_vma->sbrk = old_end + size; 
+    /* cur_vma->sbrk = old_end + size; */ 
     /* TODO: commit the allocation address
     */
-    *alloc_addr = old_end;
+    // commit symbol table
+        caller->mm->symrgtbl[rgid].rg_start = old_sbrk;
+        caller->mm->symrgtbl[rgid].rg_end = cur_vma->sbrk;
+
+        caller->mm->symrgtbl[rgid].vmaid = rgnode.vmaid;
+    *alloc_addr = old_sbrk;
 
     return 0;
 }
@@ -449,9 +454,8 @@ struct vm_rg_struct* get_vm_area_node_at_brk(struct pcb_t *caller, int vmaid, in
     // newrg->rg_end = ...
     */
     // Nam code start
-
     newrg->rg_start = cur_vma->vm_end;
-    newrg->rg_end = cur_vma->vm_end+alignedsz;
+    newrg->rg_end = vmaid ? cur_vma->vm_end - alignedsz :cur_vma->vm_end + alignedsz;
     newrg->rg_next = NULL;
     newrg->vmaid = vmaid;
     // Nam code end
@@ -492,10 +496,10 @@ int validate_overlap_vm_area(struct pcb_t *caller, int vmaid, int vmastart, int 
 int inc_vma_limit(struct pcb_t *caller, int vmaid, int inc_sz, int* inc_limit_ret)
 {
     struct vm_rg_struct * newrg = malloc(sizeof(struct vm_rg_struct));
-    int inc_amt = PAGING_PAGE_ALIGNSZ(inc_sz);
+    struct vm_area_struct *cur_vma = get_vma_by_num(caller->mm, vmaid);
+    int inc_amt = PAGING_PAGE_ALIGNSZ(inc_sz - (vmaid ? (cur_vma->sbrk - cur_vma->vm_end) : (cur_vma->vm_end - cur_vma->sbrk)));
     int incnumpage =  inc_amt / PAGING_PAGESZ;
     struct vm_rg_struct *area = get_vm_area_node_at_brk(caller, vmaid, inc_sz, inc_amt);
-    struct vm_area_struct *cur_vma = get_vma_by_num(caller->mm, vmaid);
 
     int old_end = cur_vma->vm_end;
 
@@ -506,7 +510,8 @@ int inc_vma_limit(struct pcb_t *caller, int vmaid, int inc_sz, int* inc_limit_re
     /* TODO: Obtain the new vm area based on vmaid */
     // Nam code start
     cur_vma->vm_end = area->rg_end;
-    *inc_limit_ret = inc_amt;
+    cur_vma->sbrk = cur_vma->sbrk + inc_sz;
+    *inc_limit_ret = inc_sz;
     // Nam code end
 
     if (vm_map_ram(caller, area->rg_start, area->rg_end,

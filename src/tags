@@ -1,0 +1,147 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_OUTPUT_EXCMD	mixed	/number, pattern, mixed, or combineV2/
+!_TAG_OUTPUT_FILESEP	slash	/slash or backslash/
+!_TAG_OUTPUT_MODE	u-ctags	/u-ctags or e-ctags/
+!_TAG_PATTERN_LENGTH_LIMIT	96	/0 for no limit/
+!_TAG_PROC_CWD	/home/namxt/Documents/learn/HK241/OS/assignment/os_src/src/	//
+!_TAG_PROGRAM_AUTHOR	Universal Ctags Team	//
+!_TAG_PROGRAM_NAME	Universal Ctags	/Derived from Exuberant Ctags/
+!_TAG_PROGRAM_URL	https://ctags.io/	/official site/
+!_TAG_PROGRAM_VERSION	5.9.0	//
+MEMPHY_dump	mm-memphy.c	/^int MEMPHY_dump(struct memphy_struct * mp)$/;"	f	typeref:typename:int
+MEMPHY_format	mm-memphy.c	/^int MEMPHY_format(struct memphy_struct *mp, int pagesz)$/;"	f	typeref:typename:int
+MEMPHY_get_freefp	mm-memphy.c	/^int MEMPHY_get_freefp(struct memphy_struct *mp, int *retfpn)$/;"	f	typeref:typename:int
+MEMPHY_mv_csr	mm-memphy.c	/^int MEMPHY_mv_csr(struct memphy_struct *mp, int offset)$/;"	f	typeref:typename:int
+MEMPHY_put_freefp	mm-memphy.c	/^int MEMPHY_put_freefp(struct memphy_struct *mp, int fpn)$/;"	f	typeref:typename:int
+MEMPHY_read	mm-memphy.c	/^int MEMPHY_read(struct memphy_struct * mp, int addr, BYTE *value)$/;"	f	typeref:typename:int
+MEMPHY_seq_read	mm-memphy.c	/^int MEMPHY_seq_read(struct memphy_struct *mp, int addr, BYTE *value)$/;"	f	typeref:typename:int
+MEMPHY_seq_write	mm-memphy.c	/^int MEMPHY_seq_write(struct memphy_struct * mp, int addr, BYTE value)$/;"	f	typeref:typename:int
+MEMPHY_write	mm-memphy.c	/^int MEMPHY_write(struct memphy_struct * mp, int addr, BYTE data)$/;"	f	typeref:typename:int
+OPT_ALLOC	loader.c	/^#define OPT_ALLOC	/;"	d	file:
+OPT_CALC	loader.c	/^#define OPT_CALC	/;"	d	file:
+OPT_FREE	loader.c	/^#define OPT_FREE	/;"	d	file:
+OPT_MALLOC	loader.c	/^#define OPT_MALLOC	/;"	d	file:
+OPT_READ	loader.c	/^#define OPT_READ	/;"	d	file:
+OPT_WRITE	loader.c	/^#define OPT_WRITE	/;"	d	file:
+__alloc	mm-vm.c	/^int __alloc(struct pcb_t *caller, int vmaid, int rgid, int size, int *alloc_addr)$/;"	f	typeref:typename:int
+__anon0feca7550108	mem.c	/^static struct {$/;"	s	file:
+__free	mm-vm.c	/^int __free(struct pcb_t *caller, int rgid)$/;"	f	typeref:typename:int
+__read	mm-vm.c	/^int __read(struct pcb_t *caller, int rgid, int offset, BYTE *data)$/;"	f	typeref:typename:int
+__swap_cp_page	mm.c	/^int __swap_cp_page(struct memphy_struct *mpsrc, int srcfpn,$/;"	f	typeref:typename:int
+__write	mm-vm.c	/^int __write(struct pcb_t *caller, int rgid, int offset, BYTE value)$/;"	f	typeref:typename:int
+_mem_stat	mem.c	/^} _mem_stat [NUM_PAGES];$/;"	v	typeref:struct:__anon0feca7550108[]
+_ram	mem.c	/^static BYTE _ram[RAM_SIZE];$/;"	v	typeref:typename:BYTE[]	file:
+_time	timer.c	/^static uint64_t _time;$/;"	v	typeref:typename:uint64_t	file:
+_timer	timer.c	/^static pthread_t _timer;$/;"	v	typeref:typename:pthread_t	file:
+active_mswp	os.c	/^	struct memphy_struct *active_mswp;$/;"	m	struct:mmpaging_ld_args	typeref:struct:memphy_struct *	file:
+add_mlq_proc	sched.c	/^void add_mlq_proc(struct pcb_t * proc) {$/;"	f	typeref:typename:void
+add_proc	sched.c	/^void add_proc(struct pcb_t * proc) {$/;"	f	typeref:typename:void
+alloc	cpu.c	/^int alloc(struct pcb_t * proc, uint32_t size, uint32_t reg_index) {$/;"	f	typeref:typename:int
+alloc_mem	mem.c	/^addr_t alloc_mem(uint32_t size, struct pcb_t * proc) {$/;"	f	typeref:typename:addr_t
+alloc_pages_range	mm.c	/^int alloc_pages_range(struct pcb_t *caller, int req_pgnum, struct framephy_struct** frm_lst)$/;"	f	typeref:typename:int
+attach_event	timer.c	/^struct timer_id_t * attach_event() {$/;"	f	typeref:struct:timer_id_t *
+avail_pid	loader.c	/^static uint32_t avail_pid = 1;$/;"	v	typeref:typename:uint32_t	file:
+calc	cpu.c	/^int calc(struct pcb_t * proc) {$/;"	f	typeref:typename:int
+cpu_args	os.c	/^struct cpu_args {$/;"	s	file:
+cpu_routine	os.c	/^static void * cpu_routine(void * args) {$/;"	f	typeref:typename:void *	file:
+current_time	timer.c	/^uint64_t current_time() {$/;"	f	typeref:typename:uint64_t
+dequeue	queue.c	/^struct pcb_t * dequeue(struct queue_t * q) {$/;"	f	typeref:struct:pcb_t *
+detach_event	timer.c	/^void detach_event(struct timer_id_t * event) {$/;"	f	typeref:typename:void
+dev_list	timer.c	/^static struct timer_id_container_t * dev_list = NULL;$/;"	v	typeref:struct:timer_id_container_t *	file:
+done	os.c	/^static int done = 0;$/;"	v	typeref:typename:int	file:
+dump	mem.c	/^void dump(void) {$/;"	f	typeref:typename:void
+empty	queue.c	/^int empty(struct queue_t * q) {$/;"	f	typeref:typename:int
+enlist_pgn_node	mm.c	/^int enlist_pgn_node(struct pgn_t **plist, int pgn)$/;"	f	typeref:typename:int
+enlist_vm_freerg_list	mm-vm.c	/^int enlist_vm_freerg_list(struct mm_struct *mm, struct vm_rg_struct rg_elmt)$/;"	f	typeref:typename:int
+enlist_vm_rg_node	mm.c	/^int enlist_vm_rg_node(struct vm_rg_struct **rglist, struct vm_rg_struct* rgnode)$/;"	f	typeref:typename:int
+enqueue	queue.c	/^void enqueue(struct queue_t * q, struct pcb_t * proc) {$/;"	f	typeref:typename:void
+find_victim_page	mm-vm.c	/^int find_victim_page(struct mm_struct *mm, int *retpgn)$/;"	f	typeref:typename:int
+free_data	cpu.c	/^int free_data(struct pcb_t * proc, uint32_t reg_index) {$/;"	f	typeref:typename:int
+free_mem	mem.c	/^int free_mem(addr_t address, struct pcb_t * proc) {$/;"	f	typeref:typename:int
+free_pcb_memph	mm-vm.c	/^int free_pcb_memph(struct pcb_t *caller)$/;"	f	typeref:typename:int
+get_first_lv	mem.c	/^static addr_t get_first_lv(addr_t addr) {$/;"	f	typeref:typename:addr_t	file:
+get_free_vmrg_area	mm-vm.c	/^int get_free_vmrg_area(struct pcb_t *caller, int vmaid, int size, struct vm_rg_struct *newrg)$/;"	f	typeref:typename:int
+get_mlq_proc	sched.c	/^struct pcb_t * get_mlq_proc(void) {$/;"	f	typeref:struct:pcb_t *
+get_offset	mem.c	/^static addr_t get_offset(addr_t addr) {$/;"	f	typeref:typename:addr_t	file:
+get_opcode	loader.c	/^static enum ins_opcode_t get_opcode(char * opt) {$/;"	f	typeref:enum:ins_opcode_t	file:
+get_proc	sched.c	/^struct pcb_t * get_proc(void) {$/;"	f	typeref:struct:pcb_t *
+get_second_lv	mem.c	/^static addr_t get_second_lv(addr_t addr) {$/;"	f	typeref:typename:addr_t	file:
+get_symrg_byid	mm-vm.c	/^struct vm_rg_struct *get_symrg_byid(struct mm_struct *mm, int rgid)$/;"	f	typeref:struct:vm_rg_struct *
+get_trans_table	mem.c	/^static struct trans_table_t * get_trans_table($/;"	f	typeref:struct:trans_table_t *	file:
+get_vm_area_node_at_brk	mm-vm.c	/^struct vm_rg_struct* get_vm_area_node_at_brk(struct pcb_t *caller, int vmaid, int size, int alig/;"	f	typeref:struct:vm_rg_struct *
+get_vma_by_num	mm-vm.c	/^struct vm_area_struct *get_vma_by_num(struct mm_struct *mm, int vmaid)$/;"	f	typeref:struct:vm_area_struct *
+id	os.c	/^	int id;$/;"	m	struct:cpu_args	typeref:typename:int	file:
+id	timer.c	/^	struct timer_id_t id;$/;"	m	struct:timer_id_container_t	typeref:struct:timer_id_t	file:
+inc_vma_limit	mm-vm.c	/^int inc_vma_limit(struct pcb_t *caller, int vmaid, int inc_sz, int* inc_limit_ret)$/;"	f	typeref:typename:int
+index	mem.c	/^	int index;	\/\/ Index of the page in the list of pages allocated$/;"	m	struct:__anon0feca7550108	typeref:typename:int	file:
+init_mem	mem.c	/^void init_mem(void) {$/;"	f	typeref:typename:void
+init_memphy	mm-memphy.c	/^int init_memphy(struct memphy_struct *mp, int max_size, int randomflg)$/;"	f	typeref:typename:int
+init_mm	mm.c	/^int init_mm(struct mm_struct *mm, struct pcb_t *caller)$/;"	f	typeref:typename:int
+init_pte	mm.c	/^int init_pte(uint32_t *pte,$/;"	f	typeref:typename:int
+init_scheduler	sched.c	/^void init_scheduler(void) {$/;"	f	typeref:typename:void
+init_vm_rg	mm.c	/^struct vm_rg_struct* init_vm_rg(int rg_start, int rg_end, int vmaid)$/;"	f	typeref:struct:vm_rg_struct *
+ld_args	os.c	/^static struct ld_args{$/;"	s	file:
+ld_processes	os.c	/^} ld_processes;$/;"	v	typeref:struct:ld_args
+ld_routine	os.c	/^static void * ld_routine(void * args) {$/;"	f	typeref:typename:void *	file:
+load	loader.c	/^struct pcb_t * load(const char * path) {$/;"	f	typeref:struct:pcb_t *
+main	os.c	/^int main(int argc, char * argv[]) {$/;"	f	typeref:typename:int
+main	paging.c	/^int main() {$/;"	f	typeref:typename:int
+mem_lock	mem.c	/^static pthread_mutex_t mem_lock;$/;"	v	typeref:typename:pthread_mutex_t	file:
+memramsz	os.c	/^static int memramsz;$/;"	v	typeref:typename:int	file:
+memswpsz	os.c	/^static int memswpsz[PAGING_MAX_MMSWP];$/;"	v	typeref:typename:int[]	file:
+mlq_ready_queue	sched.c	/^static struct queue_t mlq_ready_queue[MAX_PRIO];$/;"	v	typeref:struct:queue_t[]	file:
+mmpaging_ld_args	os.c	/^struct mmpaging_ld_args {$/;"	s	file:
+mram	os.c	/^	struct memphy_struct *mram;$/;"	m	struct:mmpaging_ld_args	typeref:struct:memphy_struct *	file:
+mswp	os.c	/^	struct memphy_struct **mswp;$/;"	m	struct:mmpaging_ld_args	typeref:struct:memphy_struct **	file:
+next	mem.c	/^	int next;	\/\/ The next page in the list. -1 if it is the last$/;"	m	struct:__anon0feca7550108	typeref:typename:int	file:
+next	timer.c	/^	struct timer_id_container_t * next;$/;"	m	struct:timer_id_container_t	typeref:struct:timer_id_container_t *	file:
+next_slot	timer.c	/^void next_slot(struct timer_id_t * timer_id) {$/;"	f	typeref:typename:void
+num_cpus	os.c	/^static int num_cpus;$/;"	v	typeref:typename:int	file:
+num_processes	os.c	/^int num_processes;$/;"	v	typeref:typename:int
+path	os.c	/^	char ** path;$/;"	m	struct:ld_args	typeref:typename:char **	file:
+pg_getpage	mm-vm.c	/^int pg_getpage(struct mm_struct *mm, int pgn, int *fpn, struct pcb_t *caller)$/;"	f	typeref:typename:int
+pg_getval	mm-vm.c	/^int pg_getval(struct mm_struct *mm, int addr, BYTE *data, struct pcb_t *caller)$/;"	f	typeref:typename:int
+pg_setval	mm-vm.c	/^int pg_setval(struct mm_struct *mm, int addr, BYTE value, struct pcb_t *caller)$/;"	f	typeref:typename:int
+pgalloc	mm-vm.c	/^int pgalloc(struct pcb_t *proc, uint32_t size, uint32_t reg_index)$/;"	f	typeref:typename:int
+pgfree_data	mm-vm.c	/^int pgfree_data(struct pcb_t *proc, uint32_t reg_index)$/;"	f	typeref:typename:int
+pgmalloc	mm-vm.c	/^int pgmalloc(struct pcb_t *proc, uint32_t size, uint32_t reg_index)$/;"	f	typeref:typename:int
+pgread	mm-vm.c	/^int pgread($/;"	f	typeref:typename:int
+pgwrite	mm-vm.c	/^int pgwrite($/;"	f	typeref:typename:int
+print_list_fp	mm.c	/^int print_list_fp(struct framephy_struct *ifp)$/;"	f	typeref:typename:int
+print_list_pgn	mm.c	/^int print_list_pgn(struct pgn_t *ip)$/;"	f	typeref:typename:int
+print_list_rg	mm.c	/^int print_list_rg(struct vm_rg_struct *irg)$/;"	f	typeref:typename:int
+print_list_vma	mm.c	/^int print_list_vma(struct vm_area_struct *ivma)$/;"	f	typeref:typename:int
+print_pgtbl	mm.c	/^int print_pgtbl(struct pcb_t *caller, uint32_t start, uint32_t end)$/;"	f	typeref:typename:int
+prio	os.c	/^	unsigned long * prio;$/;"	m	struct:ld_args	typeref:typename:unsigned long *	file:
+proc	mem.c	/^	uint32_t proc;	\/\/ ID of process currently uses this page$/;"	m	struct:__anon0feca7550108	typeref:typename:uint32_t	file:
+pte_set_fpn	mm.c	/^int pte_set_fpn(uint32_t *pte, int fpn)$/;"	f	typeref:typename:int
+pte_set_swap	mm.c	/^int pte_set_swap(uint32_t *pte, int swptyp, int swpoff)$/;"	f	typeref:typename:int
+put_mlq_proc	sched.c	/^void put_mlq_proc(struct pcb_t * proc) {$/;"	f	typeref:typename:void
+put_proc	sched.c	/^void put_proc(struct pcb_t * proc) {$/;"	f	typeref:typename:void
+queue_empty	sched.c	/^int queue_empty(void) {$/;"	f	typeref:typename:int
+queue_lock	sched.c	/^static pthread_mutex_t queue_lock;$/;"	v	typeref:typename:pthread_mutex_t	file:
+read	cpu.c	/^int read($/;"	f	typeref:typename:int
+read_config	os.c	/^static void read_config(const char * path) {$/;"	f	typeref:typename:void	file:
+read_mem	mem.c	/^int read_mem(addr_t address, struct pcb_t * proc, BYTE * data) {$/;"	f	typeref:typename:int
+ready_queue	sched.c	/^static struct queue_t ready_queue;$/;"	v	typeref:struct:queue_t	file:
+run	cpu.c	/^int run(struct pcb_t * proc) {$/;"	f	typeref:typename:int
+run_queue	sched.c	/^static struct queue_t run_queue;$/;"	v	typeref:struct:queue_t	file:
+start_time	os.c	/^	unsigned long * start_time;$/;"	m	struct:ld_args	typeref:typename:unsigned long *	file:
+start_timer	timer.c	/^void start_timer() {$/;"	f	typeref:typename:void
+stop_timer	timer.c	/^void stop_timer() {$/;"	f	typeref:typename:void
+time_slot	os.c	/^static int time_slot;$/;"	v	typeref:typename:int	file:
+timer_id	os.c	/^	struct timer_id_t  *timer_id;$/;"	m	struct:mmpaging_ld_args	typeref:struct:timer_id_t *	file:
+timer_id	os.c	/^	struct timer_id_t * timer_id;$/;"	m	struct:cpu_args	typeref:struct:timer_id_t *	file:
+timer_id_container_t	timer.c	/^struct timer_id_container_t {$/;"	s	file:
+timer_routine	timer.c	/^static void * timer_routine(void * args) {$/;"	f	typeref:typename:void *	file:
+timer_started	timer.c	/^static int timer_started = 0;$/;"	v	typeref:typename:int	file:
+timer_stop	timer.c	/^static int timer_stop = 0;$/;"	v	typeref:typename:int	file:
+translate	mem.c	/^static int translate($/;"	f	typeref:typename:int	file:
+validate_overlap_vm_area	mm-vm.c	/^int validate_overlap_vm_area(struct pcb_t *caller, int vmaid, int vmastart, int vmaend)$/;"	f	typeref:typename:int
+vm_map_ram	mm.c	/^int vm_map_ram(struct pcb_t *caller, int astart, int aend, int mapstart, int incpgnum, struct vm/;"	f	typeref:typename:int
+vmap_page_range	mm.c	/^int vmap_page_range(struct pcb_t *caller, \/\/ process call$/;"	f	typeref:typename:int
+vmemsz	os.c	/^	int vmemsz;$/;"	m	struct:mmpaging_ld_args	typeref:typename:int	file:
+vmemsz	os.c	/^static int vmemsz;$/;"	v	typeref:typename:int	file:
+write	cpu.c	/^int write($/;"	f	typeref:typename:int
+write_mem	mem.c	/^int write_mem(addr_t address, struct pcb_t * proc, BYTE data) {$/;"	f	typeref:typename:int
