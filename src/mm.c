@@ -51,7 +51,7 @@ int init_pte(uint32_t *pte,
  */
 int pte_set_swap(uint32_t *pte, int swptyp, int swpoff)
 {
-    SETBIT(*pte, PAGING_PTE_PRESENT_MASK);
+    CLRBIT(*pte, PAGING_PTE_PRESENT_MASK);
     SETBIT(*pte, PAGING_PTE_SWAPPED_MASK);
 
     SETVAL(*pte, swptyp, PAGING_PTE_SWPTYP_MASK, PAGING_PTE_SWPTYP_LOBIT);
@@ -86,7 +86,7 @@ int vmap_page_range(struct pcb_t *caller, // process call
     //uint32_t * pte = malloc(sizeof(uint32_t));
     struct framephy_struct *fpit = malloc(sizeof(struct framephy_struct));
     
-    //int  fpn;
+    //int fpn;
     int pgit = 0;
     int pgn = PAGING_PGN(addr);
 
@@ -105,9 +105,9 @@ int vmap_page_range(struct pcb_t *caller, // process call
 
     // loop and add fpns to ptes
     for(pgit = 0; pgit < pgnum; pgit++) {
-
+        
         pte_set_fpn(caller->mm->pgd + pgn + TRUESZ(ret_rg->vmaid,pgit), fpit->fpn);
-
+        
         fpit = fpit->fp_next;
 
         /* Tracking for later page replacement activities (if needed)
@@ -133,17 +133,20 @@ int alloc_pages_range(struct pcb_t *caller, int req_pgnum, struct framephy_struc
     */
     //caller-> ...
 
+    newfp_str = malloc(req_pgnum * sizeof (struct framephy_struct)); // why
     for(pgit = 0; pgit < req_pgnum; pgit++)
     {
         if(MEMPHY_get_freefp(caller->mram, &fpn) == 0)
         {
-            newfp_str = malloc(req_pgnum * sizeof (struct framephy_struct));
+            /* newfp_str = malloc(req_pgnum * sizeof (struct framephy_struct)); // why */
 
             newfp_str->fpn = fpn;
             newfp_str->owner = caller->mm;
             newfp_str->fp_next = *frm_lst;
 
             *frm_lst = newfp_str;
+
+            newfp_str = newfp_str + 1;
         } else {  // ERROR CODE of obtaining somes but not enough frames
             int swfpn;
             // check if
@@ -165,6 +168,8 @@ int alloc_pages_range(struct pcb_t *caller, int req_pgnum, struct framephy_struc
                 newfp_str->owner = caller->mm;
                 newfp_str->fp_next = *frm_lst;
                 *frm_lst = newfp_str;
+
+                 newfp_str = newfp_str + 1;
             } else
                 return -3000;
         }
