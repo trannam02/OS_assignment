@@ -7,8 +7,9 @@
 static struct queue_t ready_queue;
 static struct queue_t run_queue;
 static pthread_mutex_t queue_lock;
-
 int prioSlot[MAX_PRIO];
+
+
 int MarkedPrior = 0 ;
 int flag = 1;
 int count = 0;
@@ -81,11 +82,9 @@ struct pcb_t * get_mlq_proc(void) {
 		}else{
 			count = 0;
 		}
-		printf("yoyo\n");
 		goto label;
 	}else{
 		if(prioSlot[MarkedPrior] < MAX_PRIO - MarkedPrior && mlq_ready_queue[MarkedPrior].size != 0 ){
-			printf("Inside priorSlot, second if block\n");
 			proc = dequeue(&mlq_ready_queue[MarkedPrior]);
 			prioSlot[MarkedPrior]++;
 			pthread_mutex_unlock(&queue_lock);
@@ -130,25 +129,6 @@ struct pcb_t * get_proc(void) {
 	/*TODO: get a process from [ready_queue].
 	 * Remember to use lock to protect the queue.
 	 * */
-	pthread_mutex_lock(&queue_lock);
-	
-	if(ready_queue.size==0 && run_queue.size >0)
-	{
-		ready_queue.size=run_queue.size;
-		for(int i=0;i<ready_queue.size ;i++)
-		{
-			ready_queue.proc[i]=run_queue.proc[i];
-			run_queue.proc[i]=NULL;	
-		}
-		
-		run_queue.size=0;
-		proc=dequeue(&ready_queue);
-	}
-	else if(ready_queue.size >0)
-	{
-		proc=dequeue(&ready_queue);
-	}
-	pthread_mutex_unlock(&queue_lock);
 	return proc;
 }
 
