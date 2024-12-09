@@ -94,26 +94,18 @@ struct vm_rg_struct *get_symrg_byid(struct mm_struct *mm, int rgid)
  */
 int __alloc(struct pcb_t *caller, int vmaid, int rgid, int size, int *alloc_addr)
 {
-    /*Allocate at the toproof */
-
     struct vm_rg_struct rgnode;
 
-    /* TODO: commit the vmaid */
-    // rgnode.vmaid
-    /*Nam code start*/
     rgnode.vmaid = vmaid;
-    /*Nam code edn*/
     if (get_free_vmrg_area(caller, vmaid, size, &rgnode) == 0)
     {
         caller->mm->symrgtbl[rgid].rg_start = rgnode.rg_start;
         caller->mm->symrgtbl[rgid].rg_end = rgnode.rg_end;
-
         caller->mm->symrgtbl[rgid].vmaid = rgnode.vmaid;
 
         *alloc_addr = rgnode.rg_start;
 
-        printf("\nAlloc: Have free region\n");
-        // thieu: neu con du thi dua phan du vao free list
+        /* printf("\nAlloc: Have free region\n"); */
         print_pgtbl(caller, 1, 1);
         return 0;
     }
@@ -132,25 +124,20 @@ int __alloc(struct pcb_t *caller, int vmaid, int rgid, int size, int *alloc_addr
 
         *alloc_addr = old_sbrk;
 
-        printf("My sbrk  %ld -> %ld",old_sbrk, cur_vma->sbrk);
+        printf("Sbrk  %ld -> %ld",old_sbrk, cur_vma->sbrk);
         print_pgtbl(caller, 1, 1);
         return 0;
     };
 
     inc_vma_limit(caller, vmaid, size, &inc_limit_ret);
 
-    /* TODO: commit the limit increment */
-
-    /* cur_vma->sbrk = old_end + size; */
-    /* TODO: commit the allocation address
-    */
     // commit symbol table
     caller->mm->symrgtbl[rgid].rg_start = old_sbrk;
     caller->mm->symrgtbl[rgid].rg_end = cur_vma->sbrk;
 
     caller->mm->symrgtbl[rgid].vmaid = rgnode.vmaid;
     *alloc_addr = old_sbrk;
-    printf("My sbrk  %ld -> %ld",old_sbrk, cur_vma->sbrk);
+    printf("Sbrk  %ld -> %ld",old_sbrk, cur_vma->sbrk);
     print_pgtbl(caller, 1,1);
     return 0;
 }
@@ -168,12 +155,9 @@ int __free(struct pcb_t *caller, int rgid)
     if(rgid < 0 || rgid > PAGING_MAX_SYMTBL_SZ)
         return -1;
 
-    /* TODO: Manage the collect freed region to freerg_list */
-    /* Nam code start*/
     rgnode.vmaid = caller->mm->symrgtbl[rgid].vmaid;
     rgnode.rg_start = caller->mm->symrgtbl[rgid].rg_start;
     rgnode.rg_end = caller->mm->symrgtbl[rgid].rg_end;
-    /* Nam code end*/
 
     /*enlist the obsoleted memory region */
     enlist_vm_freerg_list(caller->mm, rgnode);
@@ -235,9 +219,8 @@ int pg_getpage(struct mm_struct *mm, int pgn, int *fpn, struct pcb_t *caller)
         int vicfpn;
         uint32_t vicpte;
 
-        int tgtfpn = PAGING_PTE_SWP(pte);//the target frame storing our variable
+        int tgtfpn = PAGING_PTE_SWP(pte); //the target frame storing our variable
 
-        /* TODO: Play with your paging theory here */
         /* Find victim page */
         if(find_victim_page(caller->mm, &vicpgn) == -1) {
             return -1;
@@ -268,9 +251,7 @@ int pg_getpage(struct mm_struct *mm, int pgn, int *fpn, struct pcb_t *caller)
 
         enlist_pgn_node(&caller->mm->fifo_pgn,pgn);
     }
-
     *fpn = PAGING_PTE_FPN(pte);
-
     return 0;
 }
 
@@ -372,7 +353,6 @@ int pgread(
 #endif
     MEMPHY_dump(proc->mram);
 #endif
-
     return val;
 }
 
@@ -398,7 +378,6 @@ int __write(struct pcb_t *caller, int rgid, int offset, BYTE value)
     /* Traverse on list of free vm region to find a fit space */
     while (rgit != NULL)
     {
-        /* printf("%lu %lu %lu %lu", rgit->rg_start, currg->rg_start,rgit->rg_end,currg->rg_end); */
         if(rgit->rg_start == currg->rg_start && rgit->rg_end == currg->rg_end) {
             printf("Access memory fail !!!\n");
             return -1;
@@ -471,21 +450,14 @@ int free_pcb_memph(struct pcb_t *caller)
 struct vm_rg_struct* get_vm_area_node_at_brk(struct pcb_t *caller, int vmaid, int size, int alignedsz)
 {
     struct vm_rg_struct * newrg;
-    /* TODO retrive current vma to obtain newrg, current comment out due to compiler redundant warning*/
     struct vm_area_struct *cur_vma = get_vma_by_num(caller->mm, vmaid);
 
     newrg = malloc(sizeof(struct vm_rg_struct));
 
-    /* TODO: update the newrg boundary
-    newrg->rg_start = cur_vma
-    // newrg->rg_end = ...
-    */
-    // Nam code start
     newrg->rg_start = cur_vma->vm_end;
     newrg->rg_end = vmaid ? cur_vma->vm_end - alignedsz :cur_vma->vm_end + alignedsz;
     newrg->rg_next = NULL;
     newrg->vmaid = vmaid;
-    // Nam code end
     return newrg;
 }
 
@@ -556,7 +528,6 @@ int find_victim_page(struct mm_struct *mm, int *retpgn)
         printf("%d ", pgnit->pgn);
     };
     *retpgn = pg->pgn;
-    printf("kkk %d kkk\n", *retpgn);
     if(pgnit->pg_next == NULL){
         free(pgnit);
         mm->fifo_pgn = NULL;
@@ -564,7 +535,6 @@ int find_victim_page(struct mm_struct *mm, int *retpgn)
         free(pgnit->pg_next);
     };
     pgnit->pg_next = NULL;
-    printf("troi oi %d\n", *retpgn);
     return 0;
 }
 
