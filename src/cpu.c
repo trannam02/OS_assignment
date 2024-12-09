@@ -1,7 +1,7 @@
-#include <stdio.h>
-#include "./../include/cpu.h"
-#include "./../include/mem.h"
-#include "./../include/mm.h"
+
+#include "cpu.h"
+#include "mem.h"
+#include "mm.h"
 
 int calc(struct pcb_t * proc) {
 	return ((unsigned long)proc & 0UL);
@@ -47,7 +47,6 @@ int write(
 
 int run(struct pcb_t * proc) {
 	/* Check if Program Counter point to the proper instruction */
-
 	if (proc->pc >= proc->code->size) {
 		return 1;
 	}
@@ -62,6 +61,7 @@ int run(struct pcb_t * proc) {
 	case ALLOC:
 #ifdef MM_PAGING
 		stat = pgalloc(proc, ins.arg_0, ins.arg_1);
+
 #else
 		stat = alloc(proc, ins.arg_0, ins.arg_1);
 #endif

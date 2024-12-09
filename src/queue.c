@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "./../include/queue.h"
+#include "queue.h"
 
 int empty(struct queue_t * q) {
         if (q == NULL) return 1;
@@ -12,10 +12,10 @@ void enqueue(struct queue_t * q, struct pcb_t * proc) {
         if (q->size == 0){
                 q->proc[0] = proc;
                 q->size++;
-                return;
+                return ;
         }
         q->size++;
-        q->proc[q->size - 1] = proc;
+        q->proc[q->size-1] = proc;
         // pthread_mutex_unlock(&queue_lock);
 }
 struct pcb_t * dequeue(struct queue_t * q) {
@@ -24,7 +24,6 @@ struct pcb_t * dequeue(struct queue_t * q) {
          * */
         // pthread_mutex_lock(&queue_lock);
         struct pcb_t* proc = NULL;
-
         if(q->proc[0] != NULL){
                 proc = q->proc[0];
                 for(int i = 0; i < q->size - 1; i++){
@@ -33,8 +32,6 @@ struct pcb_t * dequeue(struct queue_t * q) {
                 q->size --;
         }
         // pthread_mutex_unlock(&queue_lock)
-
 	return proc;
 }
-
 

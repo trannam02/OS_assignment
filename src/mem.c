@@ -1,4 +1,5 @@
-#include "./../include/mem.h"
+
+#include "mem.h"
 #include "stdlib.h"
 #include "string.h"
 #include <pthread.h>
