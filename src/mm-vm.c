@@ -239,7 +239,7 @@ int pg_getpage(struct mm_struct *mm, int pgn, int *fpn, struct pcb_t *caller)
 
         /* TODO: Play with your paging theory here */
         /* Find victim page */
-        if(find_victim_page(caller->mm, &vicpgn)==-1) {
+        if(find_victim_page(caller->mm, &vicpgn) == -1) {
             return -1;
         }
 
@@ -346,6 +346,7 @@ int __read(struct pcb_t *caller, int rgid, int offset, BYTE *data)
             printf("Access memory fail !!!\n");
             return -1;
         };
+        rgit = rgit->rg_next;
     };
     pg_getval(caller->mm, currg->rg_start + offset, data, caller);
 
@@ -497,17 +498,11 @@ struct vm_rg_struct* get_vm_area_node_at_brk(struct pcb_t *caller, int vmaid, in
  */
 int validate_overlap_vm_area(struct pcb_t *caller, int vmaid, int vmastart, int vmaend)
 {
-    /* struct vm_area_struct *vma = caller->mm->mmap; */
-
-    /* TODO validate the planned memory area is not overlapped */
-
-    // Nam code start
     if(vmaid == 0) {
-        if(vmaend <= get_vma_by_num(caller->mm,1)->vm_end) return -1;
+        if(vmaend > get_vma_by_num(caller->mm,1)->vm_end) return -1;
     } else {
-        if(vmaend <= get_vma_by_num(caller->mm,0)->vm_end) return -1;
+        if(vmaend < get_vma_by_num(caller->mm,0)->vm_end) return -1;
     };
-    // Nam code end
     return 0;
 }
 
@@ -530,22 +525,19 @@ int inc_vma_limit(struct pcb_t *caller, int vmaid, int inc_sz, int* inc_limit_re
     int old_end = cur_vma->vm_end;
 
     /*Validate overlap of obtained region */
-    /* if (validate_overlap_vm_area(caller, vmaid, area->rg_start, area->rg_end) < 0) */
-    /*     return -1;  */
+    if (validate_overlap_vm_area(caller, vmaid, area->rg_start, area->rg_end) < 0)
+        return -1; 
 
-    /* TODO: Obtain the new vm area based on vmaid */
-    // Nam code start
     cur_vma->vm_end = area->rg_end;
     cur_vma->sbrk = cur_vma->sbrk + TRUESZ(vmaid, inc_sz);
     *inc_limit_ret = inc_sz;
-    // Nam code end
+
     newrg->vmaid = vmaid;
     if (vm_map_ram(caller, area->rg_start, area->rg_end,
                    old_end, incnumpage, newrg) < 0)
         return -1; /* Map the memory to MEMRAM */
 
     return 0;
-
 }
 
 /*find_victim_page - find victim page
@@ -556,15 +548,23 @@ int inc_vma_limit(struct pcb_t *caller, int vmaid, int inc_sz, int* inc_limit_re
 int find_victim_page(struct mm_struct *mm, int *retpgn)
 {
     struct pgn_t *pg = mm->fifo_pgn;
-
-    /* TODO: Implement the theorical mechanism to find the victim page */
-    if(pg != NULL) {
-        *retpgn = pg->pgn;
-        mm->fifo_pgn = pg->pg_next;
-    } else {
-        return -1;
-    }
-    free(pg);
+    struct pgn_t* pgnit = pg; 
+    if(pg == NULL) return -1;
+    while(pg->pg_next != NULL){
+        pgnit = pg;
+        pg = pg->pg_next;
+        printf("%d ", pgnit->pgn);
+    };
+    *retpgn = pg->pgn;
+    printf("kkk %d kkk\n", *retpgn);
+    if(pgnit->pg_next == NULL){
+        free(pgnit);
+        mm->fifo_pgn = NULL;
+    }else{
+        free(pgnit->pg_next);
+    };
+    pgnit->pg_next = NULL;
+    printf("troi oi %d\n", *retpgn);
     return 0;
 }
 

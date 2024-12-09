@@ -1,5 +1,5 @@
 0 4
-malloc 300 0
-free 0
-write 10 0 20
-read 0 20 2
+alloc 900 0
+malloc 900 1
+write 99 0 0
+read 1 200 2

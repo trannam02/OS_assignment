@@ -128,10 +128,7 @@ int alloc_pages_range(struct pcb_t *caller, int req_pgnum, struct framephy_struc
 {
     int pgit, fpn;
     struct framephy_struct *newfp_str;
-
-    /* TODO: allocate the page
-    */
-    //caller-> ...
+    struct framephy_struct *p_newfp_str; // tail pointer
 
     newfp_str = malloc(req_pgnum * sizeof (struct framephy_struct)); // why
     for(pgit = 0; pgit < req_pgnum; pgit++)
