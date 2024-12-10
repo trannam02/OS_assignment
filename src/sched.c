@@ -1,3 +1,4 @@
+
 #include "queue.h"
 #include "sched.h"
 #include <pthread.h>
@@ -7,13 +8,6 @@
 static struct queue_t ready_queue;
 static struct queue_t run_queue;
 static pthread_mutex_t queue_lock;
-int prioSlot[MAX_PRIO];
-
-
-int MarkedPrior = 0 ;
-int flag = 1;
-int count = 0;
-
 
 #ifdef MLQ_SCHED
 static struct queue_t mlq_ready_queue[MAX_PRIO];
@@ -31,14 +25,10 @@ int queue_empty(void) {
 
 void init_scheduler(void) {
 #ifdef MLQ_SCHED
-	int i ;
+    int i ;
 
-	for (i = 0; i < MAX_PRIO; i ++){
-		
-	
+	for (i = 0; i < MAX_PRIO; i ++)
 		mlq_ready_queue[i].size = 0;
-		prioSlot[i] = MAX_PRIO - i;
-	}
 #endif
 	ready_queue.size = 0;
 	run_queue.size = 0;
@@ -53,51 +43,21 @@ void init_scheduler(void) {
  *  State representation   prio = 0 .. MAX_PRIO, curr_slot = 0..(MAX_PRIO - prio)
  */
 struct pcb_t * get_mlq_proc(void) {
-	struct pcb_t * proc = NULL;
-	/*TODO: get a process from PRIORITY [ready_queue].
-	 * Remember to use lock to protect the queue.
-	 */
-	pthread_mutex_lock(&queue_lock);
-	label: 
-	if(flag){
-		for(; MarkedPrior < MAX_PRIO; MarkedPrior++){
-			if(mlq_ready_queue[MarkedPrior].size != 0 && prioSlot[MarkedPrior] < MAX_PRIO - MarkedPrior){
-				proc = dequeue(&mlq_ready_queue[MarkedPrior]);
-				prioSlot[MarkedPrior]++;
-				flag = 0;
-				count = 0;
-				pthread_mutex_unlock(&queue_lock);
-				return proc;
-			}
-			count++;
-		}
-		for(int j = 0; j < MAX_PRIO; j++){
-			prioSlot[j] = 0;
-		}
-		MarkedPrior = 0;
-		flag = 1;
-		if(count == MAX_PRIO){
-			pthread_mutex_unlock(&queue_lock);
-			return proc;
-		}else{
-			count = 0;
-		}
-		goto label;
-	}else{
-		if(prioSlot[MarkedPrior] < MAX_PRIO - MarkedPrior && mlq_ready_queue[MarkedPrior].size != 0 ){
-			proc = dequeue(&mlq_ready_queue[MarkedPrior]);
-			prioSlot[MarkedPrior]++;
-			pthread_mutex_unlock(&queue_lock);
-			return proc;
-		}else{
-			flag = 1;
-			goto label;
-		}
-	}
-	pthread_mutex_unlock(&queue_lock);
-	return proc;	
-}
+    pthread_mutex_lock(&queue_lock); // Lock to protect shared access
+    struct pcb_t * proc = NULL;
 
+    for (int prio = 0; prio < MAX_PRIO; prio++) {
+        if (!empty(&mlq_ready_queue[prio])) {
+            // Get the process from the current priority queue
+            proc = dequeue(&mlq_ready_queue[prio]);
+            break; // Exit once a process is found
+        }
+    }
+
+    pthread_mutex_unlock(&queue_lock); // Unlock after accessing queues
+    return proc; // Return the selected process
+
+}
 
 void put_mlq_proc(struct pcb_t * proc) {
 	pthread_mutex_lock(&queue_lock);
@@ -106,7 +66,6 @@ void put_mlq_proc(struct pcb_t * proc) {
 }
 
 void add_mlq_proc(struct pcb_t * proc) {
-	
 	pthread_mutex_lock(&queue_lock);
 	enqueue(&mlq_ready_queue[proc->prio], proc);
 	pthread_mutex_unlock(&queue_lock);	
