@@ -169,7 +169,7 @@ static void read_config(const char * path) {
 	for(sit = 1; sit < PAGING_MAX_MMSWP; sit++)
 		memswpsz[sit] = 0;
 #ifdef MM_PAGING_HEAP_GODOWN
-	vmemsz = 0x300000
+	vmemsz = 0x300000;
 #endif
 #else
 	/* Read input config of memory size: MEMRAM and upto 4 MEMSWP (mem swap)
