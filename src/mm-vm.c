@@ -329,6 +329,12 @@ int __read(struct pcb_t *caller, int rgid, int offset, BYTE *data)
         };
         rgit = rgit->rg_next;
     };
+
+    if(offset > ABS(currg->rg_end,currg->rg_start)){
+        printf("Offset out of range!!!");
+        return -1;
+    };
+
     pg_getval(caller->mm, currg->rg_start + offset, data, caller);
 
     return 0;
@@ -384,6 +390,12 @@ int __write(struct pcb_t *caller, int rgid, int offset, BYTE value)
         };
         rgit = rgit->rg_next;
     };
+    // check offset out of range
+    if(offset > ABS(currg->rg_end,currg->rg_start)){
+        printf("Offset out of range!!!");
+        return -1;
+    };
+
     pg_setval(caller->mm, currg->rg_start + offset, value, caller);
 
     return 0;
