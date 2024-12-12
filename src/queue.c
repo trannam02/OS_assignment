@@ -2,55 +2,70 @@
 #include <stdlib.h>
 #include "queue.h"
 
-int empty(struct queue_t * q) {
-        if (q == NULL) return 1;
-	return (q->size == 0);
+int empty(struct queue_t *q)
+{
+        if (q == NULL)
+                return 1;
+        return (q->size == 0);
 }
-void enqueue(struct queue_t *q, struct pcb_t *proc) {
-   	if (q == NULL || proc == NULL) return; 
 
-    	if (q->size >= MAX_QUEUE_SIZE) {
-        	return;
-    	}
-    	q->proc[q->size] = proc;
-    	q->size++;
+void enqueue(struct queue_t *q, struct pcb_t *proc)
+{
+        /* TODO: put a new process to queue [q] */
+        /*
+         * Increase the number of Processe(s) in queue by 1
+         * Put in the queue the new process
+         */
+        if (q->size < MAX_QUEUE_SIZE)
+        {
+                q->proc[q->size] = proc;
+                q->size++;
+        }
+        else
+        {
+                printf("Try to add a proces to a full queue_t\n");
+                exit(1);
+        }
 }
-struct pcb_t * dequeue(struct queue_t * q) {
+
+struct pcb_t *dequeue(struct queue_t *q)
+{
         /* TODO: return a pcb whose priority is the highest
          * in the queue [q] and remember to remove it from q
          * */
-	int sizeOfQueue = q->size;
-	if( sizeOfQueue ==1 ){
-		struct pcb_t* return_proc = q->proc[0];
-		q->proc[0]=NULL;
-		q->size =0;
-		return return_proc;
-	}
-	else if( sizeOfQueue >1 && sizeOfQueue <= MAX_QUEUE_SIZE){
-		struct pcb_t* return_proc= q->proc[0];// process will be returned
-		uint32_t highest_prior = q->proc[0]->priority;
-		int position =0;
-		int i;
-		for(i=0 ; i < sizeOfQueue ;i++){
-			if( highest_prior < q->proc[i]->priority ){
-				highest_prior =q->proc[i]->priority;
-				position = i;
-			}	
-		}
-		return_proc = q->proc[position];
-		if(position == (sizeOfQueue -1 )){
-			q->proc[position] =NULL;
-			q->size = sizeOfQueue -1;
-			return return_proc;
-		}
-		else {
-			for(i = position+1;i< sizeOfQueue; i++){
-				q->proc[i-1]=q->proc[i];
-			}
-			q->proc[sizeOfQueue -1]=NULL;
-			q->size = sizeOfQueue -1;
-			return return_proc;
-		}	
-	}
-	return NULL;
+
+        // Can only process if only it is not empty
+        if (empty(q))
+                return NULL;
+
+        // res hold the pcb with the highest priority
+        struct pcb_t *res = q->proc[0];
+        /*int idx = 0;
+        for (int i = 0; i < q->size - 1; i++)
+        {
+                if(q->proc[i]->priority < res->priority) 
+                {
+                   res = q->proc[i];
+                   idx = i;
+                }
+        }*/
+
+        /* Remove the process from the queue
+         *  shift the right to left 1 time by removing a pcb took place */
+        for (int i = 0; i < q->size - 1; i++)
+        {
+                q->proc[i] = q->proc[i + 1];
+        }
+
+        // Set NULL to last element
+        q->proc[q->size - 1] = NULL;
+
+        // Size change by 1 cause we take 1 pcb
+        q->size--;
+
+        // Decrease the number of proces in this queue type by one, 
+        // the usable slot after this call is slot--
+        q->slot--;
+
+        return (res);
 }
